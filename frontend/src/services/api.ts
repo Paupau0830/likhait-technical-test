@@ -55,11 +55,12 @@ export async function createExpense(data: ExpenseFormData): Promise<Expense> {
   const category = categories.find((c) => c.name === data.category);
 
   const expenseData = {
-    description: data.description,
-    amount: data.amount,
-    category_id: category?.id,
-    date: data.date,
-  };
+  description: data.description,
+  amount: data.amount,
+  category_id: category?.id,
+  payer_name: 'Default User',
+  created_at: data.date,
+};
 
   const response = await fetch(`${API_BASE_URL}/expenses`, {
     method: "POST",
@@ -83,12 +84,23 @@ export async function updateExpense(
   id: number,
   data: Partial<ExpenseFormData>,
 ): Promise<Expense> {
+  const categories = await fetchCategories();
+  const category = categories.find((c) => c.name === data.category);
+
+  const expenseData = {
+    description: data.description,
+    amount: data.amount,
+    category_id: category?.id,
+    payer_name: 'Default User',
+    created_at: data.date,
+  };
+
   const response = await fetch(`${API_BASE_URL}/expenses/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ expense: data }),
+    body: JSON.stringify({ expense: expenseData }),
   });
 
   if (!response.ok) {

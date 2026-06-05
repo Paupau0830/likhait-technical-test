@@ -44,8 +44,8 @@ class Api::ExpensesController < ApplicationController
   private
 
   def expense_params
-    params.require(:expense).permit(:description, :amount, :category_id, :date)
-  end
+  params.require(:expense).permit(:description, :amount, :category_id, :payer_name, :created_at)
+end
 
   def format_expense(expense)
     {
@@ -53,7 +53,7 @@ class Api::ExpensesController < ApplicationController
       description: expense.description,
       amount: expense.amount.to_f,
       category: expense.category.name,
-      date: expense.date.to_s,
+      date: expense.created_at.to_date.to_s,
       created_at: expense.created_at,
       updated_at: expense.updated_at
     }
